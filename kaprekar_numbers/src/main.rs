@@ -28,7 +28,6 @@ fn from_value_to_digits(v: u32) -> ([u32; 10], usize)
 
   match i {
      0 => i = 1,
-     // 1 => sortnet1(&mut digits[..1]),
      1 => sortnet1(array_mut_ref![digits, 0, 1]),
      2 => sortnet2(array_mut_ref![digits, 0, 2]),
      3 => sortnet3(array_mut_ref![digits, 0, 3]),
@@ -69,11 +68,14 @@ fn is_kaprekar(n: u32) -> (bool, u32, u32)
    let mut max = min_max[0];
 
    // generate max and min values
-   for i in 1..len {
+   for i in 1..len - 1 {
      let j = len - i;
      max += min_max[i]*fast_10pow(i as u32);
      min += min_max[i]*fast_10pow(j as u32 - 1);
    }
+
+   max += min_max[len - 1]*fast_10pow(len as u32 - 1);
+   min += min_max[len - 1];
 
    ((max-min) == n, max, min)
 }
