@@ -19,7 +19,7 @@ fn from_value_to_digits(v: u32) -> ([u32; 10], usize)
 
   while (val > 9) && (i < 10) {
     (val, digits[i]) = div_rem(val, 10);
-    i +=1;
+    i += 1;
   }
   if i < 10 {
     digits[i] = val;
@@ -68,10 +68,10 @@ fn is_kaprekar(n: u32) -> (bool, u32, u32)
    let mut max = min_max[0];
 
    // generate max and min values
-   for i in 1..len - 1 {
+   for (i, val)  in min_max.iter().enumerate().take(len - 1).skip(1)  {
      let j = len - i;
-     max += min_max[i]*fast_10pow(i as u32);
-     min += min_max[i]*fast_10pow(j as u32 - 1);
+     max += val*fast_10pow(i as u32);
+     min += val*fast_10pow(j as u32 - 1);
    }
 
    max += min_max[len - 1]*fast_10pow(len as u32 - 1);
@@ -88,12 +88,6 @@ fn main() {
   let min_val: u32 = min_str.parse().expect("Not a valid number");
   let max_val: u32 = max_str.parse().expect("Not a valid number");
 
-  // sequential version
-  // for i in min_val..max_val {
-  //   let tuple = is_kaprekar(i);
-  //   if tuple.0 {
-  //     println!("Is Kaprekar: {}", i);
-  //   }
-  // }
+//  (min_val..max_val).into_iter().for_each(|i| if is_kaprekar(i).0 { println!("Is Kaprekar: {}", i); });
   (min_val..max_val).into_par_iter().with_min_len(64).for_each(|i| if is_kaprekar(i).0 { println!("Is Kaprekar: {}", i); });
 }
